@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 
 class BreweryFinder extends LitElement {
+  // static styles
   static styles = css`
     :host {
       display: block;
@@ -81,6 +82,7 @@ class BreweryFinder extends LitElement {
     }
   `;
 
+  // static properties declaration
   static get properties() {
     return {
       loading: { type: Boolean },
@@ -91,7 +93,7 @@ class BreweryFinder extends LitElement {
       error: { type: String },
     };
   }
-
+  // Constructor initializes the properties
   constructor() {
     super();
     this.loading = false;
@@ -102,6 +104,7 @@ class BreweryFinder extends LitElement {
     this.error = '';
   }
 
+  // updateCounts method updates the visited and remaining counts
   updateCounts() {
     this.visitedCount = this.breweries.filter(
       brewery => brewery.visited
@@ -109,6 +112,7 @@ class BreweryFinder extends LitElement {
     this.remainingCount = this.breweries.length - this.visitedCount;
   }
 
+  // fetchBreweries method fetches breweries from the API
   async fetchBreweries() {
     if (!this.searchCity.trim()) {
       this.error = 'Please enter a city name';
@@ -162,6 +166,7 @@ class BreweryFinder extends LitElement {
     }
   }
 
+  // toggleVisitedStatus method toggles the visited status of a brewery
   toggleVisitedStatus(breweryToUpdate) {
     this.breweries = this.breweries.map(brewery =>
       brewery === breweryToUpdate
@@ -171,6 +176,7 @@ class BreweryFinder extends LitElement {
     this.updateCounts();
   }
 
+  // render method renders the component
   render() {
     const handleInput = e => {
       this.searchCity = e.target.value;
