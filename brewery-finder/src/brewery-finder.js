@@ -114,10 +114,19 @@ class BreweryFinder extends LitElement {
 
   // fetchBreweries method fetches breweries from the API
   async fetchBreweries() {
-    if (!this.searchCity.trim()) {
-      this.error = 'Please enter a city name';
+    // Add input validation
+    const sanitizedCity = this.searchCity.trim().replace(/[^a-zA-Z\s-]/g, '');
+    if (!sanitizedCity) {
+      this.error = 'Please enter a valid city name';
       return;
     }
+
+    // Add rate limiting
+    if (this.lastFetch && Date.now() - this.lastFetch < 1000) {
+      this.error = 'Please wait before searching again';
+      return;
+    }
+    this.lastFetch = Date.now();
 
     try {
       this.loading = true;
