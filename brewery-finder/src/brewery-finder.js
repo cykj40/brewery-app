@@ -158,11 +158,11 @@ class BreweryFinder extends LitElement {
         this.breweries = [];
       } else {
         this.breweries = json.map(brewery => ({
-          name: brewery.name || 'Unknown Name',
-          street: brewery.street || '',
-          city: brewery.city || '',
-          state: brewery.state || '',
-          website_url: brewery.website_url || '',
+          name: this.sanitizeHTML(brewery.name) || 'Unknown Name',
+          street: this.sanitizeHTML(brewery.street) || '',
+          city: this.sanitizeHTML(brewery.city) || '',
+          state: this.sanitizeHTML(brewery.state) || '',
+          website_url: this.sanitizeURL(brewery.website_url) || '',
           visited: false,
         }));
       }
@@ -257,6 +257,33 @@ class BreweryFinder extends LitElement {
       ${this.error ? html`<div class="error-message">${this.error}</div>` : ''}
       ${renderContent()}
     `;
+  }
+
+  sanitizeHTML(str) {
+    if (!str) return '';
+    return str.replace(
+      /[&<>"']/g,
+      char =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        }[char])
+    );
+  }
+
+  sanitizeURL(url) {
+    if (!url) return '';
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+        ? url
+        : '';
+    } catch {
+      return '';
+    }
   }
 }
 
